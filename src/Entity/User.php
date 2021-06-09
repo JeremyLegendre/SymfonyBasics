@@ -6,6 +6,8 @@ use App\Repository\UserRepository;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
+use Symfony\Component\Validator\Constraints as Assert;
+use Symfony\Component\Validator\Mapping\ClassMetadata;
 
 /**
  * @ORM\Entity(repositoryClass=UserRepository::class)
@@ -54,6 +56,57 @@ class User
      * @ORM\OneToMany(targetEntity=Article::class, mappedBy="author")
      */
     private $articles;
+
+    private $passwordConfirm;
+
+    public static function loadValidatorMetadata(ClassMetadata $metadata)
+    {
+        $metadata->addPropertyConstraint('username', new Assert\Length([
+            'min' => 3,
+            'max' => 50,
+            'minMessage' => 'Votre nom d\'utilisateur doit avoir une longueur minimale de {{limit}} caractères',
+            'maxMessage' => 'Votre nom d\'utilisateur doit avoir une longueur maximale de {{limit}} caractères',
+        ]));
+
+        $metadata->addPropertyConstraint('firstname', new Assert\Length([
+            'min' => 3,
+            'max' => 50,
+            'minMessage' => 'Votre prénom doit avoir une longueur minimale de {{limit}} caractères',
+            'maxMessage' => 'Votre prénom doit avoir une longueur maximale de {{limit}} caractères',
+        ]));
+
+        $metadata->addPropertyConstraint('lastname', new Assert\Length([
+            'min' => 3,
+            'max' => 50,
+            'minMessage' => 'Votre nom doit avoir une longueur minimale de {{limit}} caractères',
+            'maxMessage' => 'Votre nom doit avoir une longueur maximale de {{limit}} caractères',
+        ]));
+
+        $metadata->addPropertyConstraint('email', new Assert\Email([
+            'message' => 'L\'email {{ value }} n\'est pas valide.',
+        ]));
+
+
+        $metadata->addPropertyConstraint('password', new Assert\Length([
+            'min' => 8,
+            'max' => 50,
+            'minMessage' => 'Votre mot de passe doit avoir une longueur minimale de {{limit}} caractères',
+            'maxMessage' => 'Votre mot de passe doit avoir une longueur maximale de {{limit}} caractères',
+        ]));
+
+        $metadata->addPropertyConstraint('passwordConfirm', new Assert\Length([
+            'min' => 8,
+            'max' => 50,
+            'minMessage' => 'Votre mot de passe doit avoir une longueur minimale de {{limit}} caractères',
+            'maxMessage' => 'Votre mot de passe doit avoir une longueur maximale de {{limit}} caractères',
+        ]));
+
+        
+        $metadata->addPropertyConstraint('passwordConfirm', new Assert\IdenticalTo([
+            'propertyPath' => "password",
+            'message' => 'Les mots de passes ne correspondent pas.'
+        ]));
+    }
 
     public function __construct()
     {
@@ -127,6 +180,18 @@ class User
     public function setPassword(string $password): self
     {
         $this->password = $password;
+
+        return $this;
+    }
+
+    public function getPasswordConfirm(): ?string
+    {
+        return $this->passwordConfirm;
+    }
+
+    public function setPasswordConfirm(string $passwordConfirm): self
+    {
+        $this->passwordConfirm = $passwordConfirm;
 
         return $this;
     }
