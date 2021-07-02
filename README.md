@@ -1,3 +1,12 @@
+# Projet basique en Symfony
+
+Environnement Windows:
+
+ - Symfony 5.3
+ - PHP 7.4.20 
+ - XAMPP Control Panel 3.3.0 pour APACHE et MySQL
+ - Composer 2.1.3 
+
 # Commandes Symfony
 
 ## Server
