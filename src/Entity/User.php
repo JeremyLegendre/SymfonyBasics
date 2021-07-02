@@ -6,6 +6,8 @@ use App\Repository\UserRepository;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
+use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
+use Symfony\Component\Security\Core\User\UserInterface;
 use Symfony\Component\Validator\Constraints as Assert;
 use Symfony\Component\Validator\Mapping\ClassMetadata;
 
@@ -13,7 +15,7 @@ use Symfony\Component\Validator\Mapping\ClassMetadata;
  * @ORM\Entity(repositoryClass=UserRepository::class)
  * @ORM\Table(name="`user`")
  */
-class User
+class User implements UserInterface
 {
     /**
      * @ORM\Id
@@ -61,6 +63,11 @@ class User
 
     public static function loadValidatorMetadata(ClassMetadata $metadata)
     {
+        $metadata->addConstraint(new UniqueEntity([
+            'fields' => 'email',
+            'message' => 'Cet email est déjà utilisé.',
+        ]));
+
         $metadata->addPropertyConstraint('username', new Assert\Length([
             'min' => 3,
             'max' => 50,
@@ -85,7 +92,6 @@ class User
         $metadata->addPropertyConstraint('email', new Assert\Email([
             'message' => 'L\'email {{ value }} n\'est pas valide.',
         ]));
-
 
         $metadata->addPropertyConstraint('password', new Assert\Length([
             'min' => 8,
@@ -236,5 +242,24 @@ class User
         }
 
         return $this;
+    }
+
+    public function getRoles() 
+    {
+        return ['ROLE_USER'];
+    }
+
+    public function getSalt() 
+    {
+    }
+
+    public function eraseCredentials()
+    {
+        
+    }
+
+    public function getUserIdentifier()
+    {
+        return $this->getId();
     }
 }

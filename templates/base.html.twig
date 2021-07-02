@@ -31,7 +31,14 @@
                       </a>
                     </li>
                   </ul>
-                  <a class="btn btn-success" href="{{path('security_register')}}">S'inscrire</a>
+                
+                  {% if app.user %}
+                    <a class="btn btn-danger m-1" href="{{path('security_logout')}}">Se déconnecter</a>
+                  {% else %}
+                    <a class="btn btn-success m-1" href="{{path('security_register')}}">S'inscrire</a>
+                    <a class="btn btn-success m-1" href="{{path('security_login')}}">Se connecter</a>
+                  {% endif %}
+                  
                 </div>
               </div>
             </nav>
