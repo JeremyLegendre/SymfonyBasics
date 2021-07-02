@@ -24,9 +24,9 @@ symfony server:stop
 
 ## Ajout de package
 
-Penser a aller voir les packages disponibles sur flex.symfony
-En ligne de commande: 
+Penser a aller voir les packages disponibles sur [https://flex.symfony.com](flex.symfony)
 
+En ligne de commande: 
 ```
 composer req <package_alias>
 composer require <package_alias>
